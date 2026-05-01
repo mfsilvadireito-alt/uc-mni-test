@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UC MNI Test · Protótipo TJGO</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --uc-black: #0a0a0a;
+  --uc-graphite: #2a2a2a;
+  --uc-warm-gray: #6b6b68;
+  --uc-line: #d4cfc0;
+  --uc-cream: #faf6ec;
+  --uc-paper: #fafaf7;
+  --uc-paper-warm: #f5f3ec;
+  --uc-gold: #8a6f3d;
+  --uc-gold-soft: #c9b687;
+  --uc-red: #a8472d;
+  --uc-amber: #b87f1c;
+  --uc-green: #4a7c4a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  font-family: 'EB Garamond', 'Times New Roman', serif;
+  background: var(--uc-paper);
+  color: var(--uc-black);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+header {
+  border-bottom: 1px solid var(--uc-line);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--uc-black);
+}
+h1::before { content: "§ "; color: var(--uc-gold); }
+.subtitle {
+  font-size: 14px;
+  color: var(--uc-warm-gray);
+  font-style: italic;
+  margin-top: 4px;
+}
+.warn-banner {
+  background: #f5e3c4;
+  border: 1px solid var(--uc-amber);
+  border-left: 4px solid var(--uc-amber);
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.warn-banner strong { color: var(--uc-amber); font-variant: small-caps; letter-spacing: 0.04em; }
+
+.card {
+  background: white;
+  border: 1px solid var(--uc-line);
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  color: var(--uc-black);
+}
+.card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--uc-gold);
+  margin: 14px 0 6px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--uc-graphite);
+}
+input[type="text"], input[type="password"], input[type="url"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--uc-line);
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  background: white;
+}
+input:focus {
+  outline: none;
+  border-color: var(--uc-gold);
+  box-shadow: 0 0 0 2px rgba(138, 111, 61, 0.15);
+}
+.help {
+  font-size: 12px;
+  color: var(--uc-warm-gray);
+  margin-top: 3px;
+}
+
+.btn {
+  font-family: 'EB Garamond', serif;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--uc-black);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary {
+  background: var(--uc-black);
+  color: var(--uc-gold-soft);
+}
+.btn-primary:hover { background: var(--uc-graphite); }
+.btn-primary:disabled {
+  background: var(--uc-warm-gray);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.btn-outline {
+  background: transparent;
+  color: var(--uc-black);
+}
+.btn-outline:hover { background: var(--uc-cream); }
+.btn-danger {
+  background: white;
+  color: var(--uc-red);
+  border-color: var(--uc-red);
+}
+.btn-danger:hover { background: #fbeae6; }
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.btn-row .btn { flex: 1; }
+
+.status-bar {
+  background: var(--uc-cream);
+  border: 1px solid var(--uc-line);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.status-bar .conn-info { color: var(--uc-graphite); }
+.status-bar .conn-info b { color: var(--uc-gold); }
+
+.spinner {
+  display: inline-block;
+  border: 2px solid var(--uc-line);
+  border-top-color: var(--uc-gold);
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result-meta {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 6px 14px;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.result-meta dt { color: var(--uc-warm-gray); font-size: 13px; }
+.result-meta dd { color: var(--uc-black); }
+
+.parte {
+  border-left: 3px solid var(--uc-gold-soft);
+  padding: 8px 14px;
+  margin-bottom: 10px;
+  background: var(--uc-cream);
+  border-radius: 0 4px 4px 0;
+}
+.parte-nome {
+  font-weight: 600;
+  color: var(--uc-black);
+}
+.parte-doc {
+  font-size: 12px;
+  color: var(--uc-warm-gray);
+  font-family: 'Inter', monospace;
+}
+.advs-list {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--uc-graphite);
+}
+.advs-list li {
+  list-style: none;
+  padding-left: 18px;
+  position: relative;
+  margin: 2px 0;
+}
+.advs-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 4px;
+  color: var(--uc-gold);
+}
+.adv-oab {
+  font-family: 'Inter', monospace;
+  font-size: 11px;
+  color: var(--uc-warm-gray);
+  margin-left: 6px;
+}
+
+.movs-list {
+  font-size: 13px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--uc-line);
+  border-radius: 4px;
+  padding: 8px 12px;
+  background: white;
+}
+.mov-item {
+  padding: 6px 0;
+  border-bottom: 1px dotted var(--uc-line);
+}
+.mov-item:last-child { border-bottom: none; }
+.mov-data {
+  font-family: 'Inter', monospace;
+  font-size: 11px;
+  color: var(--uc-warm-gray);
+}
+.mov-desc { color: var(--uc-graphite); }
+.mov-cod {
+  display: inline-block;
+  background: var(--uc-paper-warm);
+  color: var(--uc-warm-gray);
+  font-family: 'Inter', monospace;
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-left: 6px;
+}
+
+.error-card {
+  background: #fbeae6;
+  border: 1px solid var(--uc-red);
+  border-left: 4px solid var(--uc-red);
+}
+.error-card h2 { color: var(--uc-red); }
+.error-detail {
+  font-family: 'Inter', monospace;
+  font-size: 11px;
+  background: white;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.hidden { display: none !important; }
+
+footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--uc-warm-gray);
+  font-style: italic;
+}
+.session-timer {
+  font-family: 'Inter', monospace;
+  font-size: 12px;
+  color: var(--uc-amber);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1>UC MNI Test</h1>
+  <p class="subtitle">Protótipo isolado · consulta de processos via MNI 2.2.2 · TJGO/Projudi</p>
+</header>
+
+<div class="warn-banner">
+  <strong>⚠ Aviso de segurança</strong> — esta página recebe sua senha do Projudi/TJGO em texto plano para enviar ao Worker. A senha <strong>não é gravada</strong> em lugar algum: vive apenas em memória durante a sessão e é apagada ao fechar a aba. Não digite a senha em conexões públicas (Wi-Fi de aeroporto, lan house, etc).
+</div>
+
+<!-- TELA 1: LOGIN -->
+<div id="screen-login" class="card">
+  <h2>Conectar ao MNI/TJGO</h2>
+
+  <div class="field">
+    <label for="workerUrl">URL da Worker MNI</label>
+    <input type="url" id="workerUrl" placeholder="https://uc-mni.SEU-USUARIO.workers.dev" autocomplete="off">
+    <p class="help">Cole aqui a URL da Cloudflare Worker que você criou (uc-mni). Esta URL é gravada localmente para você não ter que colar toda vez. Sua senha NÃO é gravada.</p>
+  </div>
+
+  <div class="field">
+    <label for="cpf">CPF (idConsultante)</label>
+    <input type="text" id="cpf" placeholder="000.000.000-00" autocomplete="off" inputmode="numeric">
+    <p class="help">Mesmo CPF que você usa para entrar no Projudi do TJGO.</p>
+  </div>
+
+  <div class="field">
+    <label for="senha">Senha (senhaConsultante)</label>
+    <input type="password" id="senha" placeholder="Sua senha do Projudi" autocomplete="new-password">
+    <p class="help">Mesma senha que você usa para entrar no Projudi. Apagada da memória ao fechar a aba.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnConectar">Conectar</button>
+  </div>
+</div>
+
+<!-- TELA 2: CONSULTA -->
+<div id="screen-consulta" class="hidden">
+  <div class="status-bar">
+    <div class="conn-info">
+      Conectado · CPF <b id="connCpf"></b> · sessão <span class="session-timer" id="sessionTimer"></span>
+    </div>
+    <button class="btn btn-danger" id="btnSair">Sair (limpar credencial)</button>
+  </div>
+
+  <div class="card">
+    <h2>Consultar processo</h2>
+
+    <div class="field">
+      <label for="cnj">Número do processo (CNJ)</label>
+      <input type="text" id="cnj" placeholder="0000000-00.0000.8.09.0000" autocomplete="off">
+      <p class="help">Cole o CNJ completo. O app extrai apenas os dígitos. Funciona apenas para processos do TJGO (segmento 8.09).</p>
+    </div>
+
+    <div class="field">
+      <label>
+        <input type="checkbox" id="incluirMovimentos" checked> Incluir movimentações
+      </label>
+      <label style="margin-top: 4px;">
+        <input type="checkbox" id="incluirDocumentos"> Incluir lista de documentos (apenas metadados, não baixa o conteúdo)
+      </label>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnConsultar">Consultar processo</button>
+    </div>
+  </div>
+
+  <div id="resultArea"></div>
+</div>
+
+<footer>
+  Protótipo isolado · não persiste dados · sessão expira após 30 minutos sem uso<br>
+  Urany de Castro Advocacia · v0.1
+</footer>
+
+</div>
+
+<script>
+'use strict';
+
+// ============================================================================
+// Estado da sessão (em memória apenas)
+// ============================================================================
+const session = {
+  cpf: null,
+  senha: null,
+  workerUrl: null,
+  conectadoEm: null,
+  ultimoUso: null
+};
+
+const SESSION_TIMEOUT_MIN = 30;
+let sessionTimerInterval = null;
+
+// ============================================================================
+// DOM helpers
+// ============================================================================
+const $ = id => document.getElementById(id);
+const show = el => el.classList.remove('hidden');
+const hide = el => el.classList.add('hidden');
+
+// ============================================================================
+// Bootstrap
+// ============================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Carrega URL da Worker do localStorage (se já configurada)
+  const savedWorkerUrl = localStorage.getItem('uc_mni_worker_url');
+  if (savedWorkerUrl) {
+    $('workerUrl').value = savedWorkerUrl;
+  }
+
+  $('btnConectar').addEventListener('click', handleConectar);
+  $('btnSair').addEventListener('click', handleSair);
+  $('btnConsultar').addEventListener('click', handleConsultar);
+
+  // Limpa senha em memória se a aba for fechada/recarregada
+  window.addEventListener('beforeunload', () => {
+    session.senha = null;
+  });
+
+  // Permite Enter no campo de senha para conectar
+  $('senha').addEventListener('keypress', e => {
+    if (e.key === 'Enter') handleConectar();
+  });
+  $('cnj').addEventListener('keypress', e => {
+    if (e.key === 'Enter') handleConsultar();
+  });
+});
+
+// ============================================================================
+// Conectar (validações + grava URL)
+// ============================================================================
+async function handleConectar() {
+  const workerUrl = $('workerUrl').value.trim().replace(/\/$/, '');
+  const cpf = $('cpf').value.replace(/\D/g, '');
+  const senha = $('senha').value;
+
+  if (!workerUrl) {
+    alert('Cole a URL da sua Cloudflare Worker primeiro.');
+    return;
+  }
+  if (!/^https:\/\//.test(workerUrl)) {
+    alert('A URL deve começar com https://');
+    return;
+  }
+  if (cpf.length !== 11) {
+    alert('CPF deve ter 11 dígitos.');
+    return;
+  }
+  if (!senha || senha.length < 4) {
+    alert('Digite sua senha do Projudi.');
+    return;
+  }
+
+  // Testa a Worker (chama /health)
+  const btn = $('btnConectar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Testando Worker...';
+
+  try {
+    const r = await fetch(workerUrl + '/health');
+    if (!r.ok) {
+      throw new Error('Worker retornou HTTP ' + r.status);
+    }
+    const data = await r.json();
+    if (!data.ok) {
+      throw new Error('Worker respondeu mas sem ok=true');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Conectar';
+    alert('Não consegui acessar a Worker:\n\n' + err.message + '\n\nVerifique se a URL está correta e se a Worker está deployada.');
+    return;
+  }
+
+  // Tudo certo
+  session.cpf = cpf;
+  session.senha = senha;
+  session.workerUrl = workerUrl;
+  session.conectadoEm = Date.now();
+  session.ultimoUso = Date.now();
+
+  // Grava só a URL (NUNCA a senha)
+  localStorage.setItem('uc_mni_worker_url', workerUrl);
+
+  // Limpa campos sensíveis da tela
+  $('senha').value = '';
+
+  // Troca de tela
+  hide($('screen-login'));
+  show($('screen-consulta'));
+  $('connCpf').textContent = formatCpf(cpf);
+
+  startSessionTimer();
+  $('cnj').focus();
+}
+
+function handleSair() {
+  session.cpf = null;
+  session.senha = null;
+  session.conectadoEm = null;
+  session.ultimoUso = null;
+  if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+  $('cpf').value = '';
+  $('senha').value = '';
+  $('cnj').value = '';
+  $('resultArea').innerHTML = '';
+  hide($('screen-consulta'));
+  show($('screen-login'));
+}
+
+function startSessionTimer() {
+  const update = () => {
+    if (!session.ultimoUso) return;
+    const elapsed = Date.now() - session.ultimoUso;
+    const remainingMs = SESSION_TIMEOUT_MIN * 60 * 1000 - elapsed;
+    if (remainingMs <= 0) {
+      handleSair();
+      alert('Sessão expirada por inatividade. Faça login novamente.');
+      return;
+    }
+    const m = Math.floor(remainingMs / 60000);
+    const s = Math.floor((remainingMs % 60000) / 1000);
+    $('sessionTimer').textContent = `expira em ${m}m${String(s).padStart(2,'0')}s`;
+  };
+  update();
+  sessionTimerInterval = setInterval(update, 1000);
+}
+
+// ============================================================================
+// Consultar processo
+// ============================================================================
+async function handleConsultar() {
+  const cnj = $('cnj').value.replace(/\D/g, '');
+  const incluirMovimentos = $('incluirMovimentos').checked;
+  const incluirDocumentos = $('incluirDocumentos').checked;
+
+  if (cnj.length !== 20) {
+    alert('CNJ deve ter 20 dígitos.');
+    return;
+  }
+  // Validação leve: segmento J=8 (estadual) e TR=09 (Goiás)
+  const segmento = cnj.substring(13, 14);
+  const tribunal = cnj.substring(14, 16);
+  if (segmento !== '8' || tribunal !== '09') {
+    if (!confirm(`O CNJ informado parece não ser do TJGO (segmento=${segmento}, tribunal=${tribunal}). O Projudi/TJGO provavelmente vai responder "processo não encontrado". Continuar mesmo assim?`)) {
+      return;
+    }
+  }
+
+  if (!session.senha) {
+    alert('Sessão expirou. Faça login novamente.');
+    handleSair();
+    return;
+  }
+
+  session.ultimoUso = Date.now();
+
+  const btn = $('btnConsultar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Consultando Projudi...';
+  $('resultArea').innerHTML = '';
+
+  try {
+    const resp = await fetch(session.workerUrl + '/consultarProcesso', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cpf: session.cpf,
+        senha: session.senha,
+        cnj,
+        movimentos: incluirMovimentos,
+        incluirDocumentos
+      })
+    });
+    const data = await resp.json();
+
+    if (!resp.ok || !data.sucesso) {
+      renderError(data, resp.status);
+    } else {
+      renderResult(data.processo, cnj);
+    }
+  } catch (err) {
+    renderError({ error: 'fetch_failed', message: err.message }, 0);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Consultar processo';
+  }
+}
+
+function renderError(data, httpStatus) {
+  const html = `
+    <div class="card error-card">
+      <h2>Erro na consulta</h2>
+      <p><strong>Tipo:</strong> ${escapeHtml(data.error || 'desconhecido')} ${httpStatus ? `(HTTP ${httpStatus})` : ''}</p>
+      <p style="margin-top: 6px;"><strong>Mensagem:</strong> ${escapeHtml(data.mensagem || data.message || 'sem detalhes')}</p>
+      ${data.raw_excerpt || data.raw ? `
+        <details style="margin-top: 10px;">
+          <summary style="cursor: pointer; color: var(--uc-red); font-weight: 500;">Ver resposta bruta do Projudi (debug)</summary>
+          <div class="error-detail">${escapeHtml(data.raw_excerpt || data.raw || '').substring(0, 3000)}</div>
+        </details>
+      ` : ''}
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="$('resultArea').innerHTML = ''">Limpar</button>
+      </div>
+    </div>`;
+  $('resultArea').innerHTML = html;
+}
+
+function renderResult(processo, cnj) {
+  const cab = processo.cabecalho || {};
+  const polos = processo.polos || {};
+  const movs = processo.movimentos || [];
+  const docs = processo.documentos || [];
+
+  const cnjFmt = formatCnj(cnj);
+
+  let html = `
+    <div class="card">
+      <h2>Resultado · ${escapeHtml(cnjFmt)}</h2>
+
+      <h3>Capa do processo</h3>
+      <dl class="result-meta">
+        ${cab.classeProcessual ? `<dt>Classe processual:</dt><dd>${escapeHtml(cab.classeProcessual)}</dd>` : ''}
+        ${cab.competencia ? `<dt>Competência:</dt><dd>${escapeHtml(cab.competencia)}</dd>` : ''}
+        ${cab.valorCausa ? `<dt>Valor da causa:</dt><dd><strong>R$ ${formatMoney(cab.valorCausa)}</strong></dd>` : ''}
+        ${cab.dataAjuizamento ? `<dt>Data de ajuizamento:</dt><dd>${formatDate(cab.dataAjuizamento)}</dd>` : ''}
+        ${cab.nivelSigilo ? `<dt>Nível de sigilo:</dt><dd>${escapeHtml(cab.nivelSigilo)}</dd>` : ''}
+        ${cab.intervencaoMP ? `<dt>Intervenção MP:</dt><dd>${escapeHtml(cab.intervencaoMP)}</dd>` : ''}
+        ${cab.tamanhoProcesso ? `<dt>Tamanho:</dt><dd>${escapeHtml(cab.tamanhoProcesso)}</dd>` : ''}
+        ${cab.orgaoJulgador ? `<dt>Órgão julgador:</dt><dd>${escapeHtml(cab.orgaoJulgador.nomeOrgao || JSON.stringify(cab.orgaoJulgador))}</dd>` : ''}
+        ${cab.assuntos?.length ? `<dt>Assuntos:</dt><dd>${cab.assuntos.map(a => `<code>${escapeHtml(a.codigo)}</code>${a.principal ? ' (principal)' : ''}`).join(' · ')}</dd>` : ''}
+      </dl>
+  `;
+
+  // POLOS
+  if (polos.ATIVO?.length || polos.PASSIVO?.length) {
+    html += `<h3>Partes</h3>`;
+    if (polos.ATIVO?.length) {
+      html += `<div style="font-size: 11px; font-variant: small-caps; color: var(--uc-warm-gray); margin: 8px 0 4px;">Polo Ativo</div>`;
+      polos.ATIVO.forEach(p => {
+        html += renderParte(p);
+      });
+    }
+    if (polos.PASSIVO?.length) {
+      html += `<div style="font-size: 11px; font-variant: small-caps; color: var(--uc-warm-gray); margin: 12px 0 4px;">Polo Passivo</div>`;
+      polos.PASSIVO.forEach(p => {
+        html += renderParte(p);
+      });
+    }
+  } else {
+    html += `<h3>Partes</h3><p style="color: var(--uc-warm-gray); font-size: 13px;">Nenhuma parte retornada (pode ser processo sigiloso ou parser não detectou).</p>`;
+  }
+
+  // MOVIMENTOS
+  if (movs.length) {
+    html += `<h3>Movimentações (${movs.length})</h3>`;
+    html += `<div class="movs-list">`;
+    movs.forEach(m => {
+      html += `
+        <div class="mov-item">
+          <span class="mov-data">${formatDate(m.data)}</span>
+          <span class="mov-desc">${escapeHtml(m.descricaoNacional || m.descricaoLocal || 'sem descrição')}</span>
+          ${m.codigoNacional ? `<span class="mov-cod">cód. ${escapeHtml(m.codigoNacional)}</span>` : ''}
+          ${m.complementos?.length ? `<div style="font-size: 11px; color: var(--uc-warm-gray); margin-left: 70px; margin-top: 2px;">${m.complementos.map(escapeHtml).join(' · ')}</div>` : ''}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // DOCUMENTOS
+  if (docs.length) {
+    html += `<h3>Documentos (${docs.length})</h3>`;
+    html += `<div style="font-size: 12px; color: var(--uc-warm-gray);">${docs.length} documentos no processo. Listagem completa só com a opção "Incluir documentos" marcada.</div>`;
+  }
+
+  html += `
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="$('cnj').value = ''; $('cnj').focus(); $('resultArea').innerHTML = '';">Nova consulta</button>
+        <button class="btn btn-outline" onclick="copyAsJson()">Copiar JSON bruto</button>
+      </div>
+    </div>
+    <details style="margin-top: -10px; margin-bottom: 20px;">
+      <summary style="cursor: pointer; color: var(--uc-warm-gray); font-size: 13px;">Ver JSON completo (debug)</summary>
+      <pre style="background: white; border: 1px solid var(--uc-line); border-radius: 4px; padding: 10px; font-size: 11px; overflow-x: auto; max-height: 400px;">${escapeHtml(JSON.stringify(processo, null, 2))}</pre>
+    </details>
+  `;
+
+  $('resultArea').innerHTML = html;
+
+  // Stash for "Copiar JSON bruto"
+  window._lastResult = processo;
+}
+
+function renderParte(p) {
+  const nome = p.nome || 'sem nome';
+  const tipo = p.tipoPessoa || '';
+  const sexo = p.sexo || '';
+  const doc = p.documento ? formatDocumento(p.documento, p.tipoDocumento) : '';
+
+  let advsHtml = '';
+  if (p.advogados?.length) {
+    advsHtml = `<ul class="advs-list">` +
+      p.advogados.map(a =>
+        `<li>${escapeHtml(a.nome || '?')} ${a.oab ? `<span class="adv-oab">OAB ${escapeHtml(a.oab)}</span>` : ''}</li>`
+      ).join('') +
+      `</ul>`;
+  }
+
+  return `
+    <div class="parte">
+      <div class="parte-nome">${escapeHtml(nome)} ${tipo ? `<span style="font-size: 11px; color: var(--uc-warm-gray); font-weight: 400;">(${escapeHtml(tipo)}${sexo ? ' · ' + escapeHtml(sexo) : ''})</span>` : ''}</div>
+      ${doc ? `<div class="parte-doc">${escapeHtml(doc)}</div>` : ''}
+      ${advsHtml}
+    </div>
+  `;
+}
+
+function copyAsJson() {
+  if (!window._lastResult) return;
+  navigator.clipboard.writeText(JSON.stringify(window._lastResult, null, 2));
+  alert('JSON copiado para a área de transferência.');
+}
+
+// ============================================================================
+// Helpers de formatação
+// ============================================================================
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])
+  );
+}
+
+function formatCpf(d) {
+  d = String(d).replace(/\D/g, '');
+  if (d.length !== 11) return d;
+  return `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6,9)}-${d.slice(9,11)}`;
+}
+
+function formatCnj(d) {
+  d = String(d).replace(/\D/g, '');
+  if (d.length !== 20) return d;
+  return `${d.slice(0,7)}-${d.slice(7,9)}.${d.slice(9,13)}.${d.slice(13,14)}.${d.slice(14,16)}.${d.slice(16,20)}`;
+}
+
+function formatDocumento(doc, tipo) {
+  const d = String(doc).replace(/\D/g, '');
+  if (tipo?.toUpperCase() === 'CPF' || d.length === 11) {
+    return 'CPF ' + (d.length === 11
+      ? `${d.slice(0,3)}.${d.slice(3,6)}.${d.slice(6,9)}-${d.slice(9,11)}`
+      : d);
+  }
+  if (tipo?.toUpperCase() === 'CNPJ' || d.length === 14) {
+    return 'CNPJ ' + (d.length === 14
+      ? `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12,14)}`
+      : d);
+  }
+  return doc;
+}
+
+function formatMoney(v) {
+  const n = Number(v);
+  if (isNaN(n)) return v;
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  // MNI retorna formato YYYYMMDDHHmmss ou YYYY-MM-DD ou YYYY-MM-DDTHH:mm:ss
+  let str = String(s);
+  // Tenta YYYYMMDDhhmmss
+  const m = str.match(/^(\d{4})(\d{2})(\d{2})(?:(\d{2})(\d{2})(\d{2})?)?$/);
+  if (m) {
+    return `${m[3]}/${m[2]}/${m[1]}${m[4] ? ` ${m[4]}:${m[5]}` : ''}`;
+  }
+  // Tenta ISO
+  const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  }
+  return str;
+}
+</script>
+</body>
+</html>
